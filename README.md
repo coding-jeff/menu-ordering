@@ -14,6 +14,10 @@ npm run dev
 
 没有配置 Supabase 时，页面使用演示菜单；下单仅显示演示提示，不会写入数据库。连接数据库后，在 `.env.local` 填入项目 URL 和 publishable key。不要将 `service_role` 或 secret key 放进浏览器环境变量。
 
+## 部署
+
+仓库配置了 GitHub Pages 自动部署。首次部署前，在 GitHub 仓库的 **Settings → Pages → Build and deployment → Source** 选择 **GitHub Actions**；随后 `main` 分支每次更新都会构建并发布到 `https://coding-jeff.github.io/menu-ordering/`。
+
 ## 数据库
 
 迁移文件：`supabase/migrations/20261012000000_menu_ordering.sql`。在 Supabase SQL Editor 执行，或通过 Supabase CLI 迁移。它创建三张表、索引、RLS 策略、演示菜品，并创建一个窄权限的 `place_order` PostgreSQL 函数：该函数从数据库读取菜单价格，在同一事务里保存订单及订单菜品快照，避免前端伪造金额或产生只写入一半的订单。匿名前端只获准调用此函数，无权直接插入订单或篡改订单状态。
